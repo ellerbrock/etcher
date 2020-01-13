@@ -16,14 +16,15 @@
 
 import { faCog, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { sourceDestination } from 'etcher-sdk';
 import * as _ from 'lodash';
 import * as path from 'path';
 import * as React from 'react';
-import { Button } from 'rendition';
+import { Button, Flex } from 'rendition';
 
 import { FeaturedProject } from '../../components/featured-project/featured-project';
 import FinishPage from '../../components/finish/finish';
-import { ImageSelector } from '../../components/image-selector/image-selector';
+import { SourceSelector } from '../../components/source-selector/source-selector';
 import { ReducedFlashingInfos } from '../../components/reduced-flashing-infos/reduced-flashing-infos';
 import { SafeWebview } from '../../components/safe-webview/safe-webview';
 import { SettingsModal } from '../../components/settings/settings';
@@ -67,6 +68,14 @@ function getImageBasename() {
 	return selectionImageName || imageBasename;
 }
 
+type Source = typeof sourceDestination.File | typeof sourceDestination.Http;
+
+interface SourceOptions {
+	imagePath: string;
+	SourceType: Source;
+	sourceParams?: any[];
+}
+
 interface MainPageStateFromStore {
 	isFlashing: boolean;
 	hasImage: boolean;
@@ -81,6 +90,7 @@ interface MainPageState {
 	current: 'main' | 'success';
 	isWebviewShowing: boolean;
 	hideSettings: boolean;
+	source: SourceOptions;
 }
 
 export class MainPage extends React.Component<
@@ -93,6 +103,10 @@ export class MainPage extends React.Component<
 			current: 'main',
 			isWebviewShowing: false,
 			hideSettings: true,
+			source: {
+				imagePath: '',
+				SourceType: sourceDestination.File,
+			},
 			...this.stateHelper(),
 		};
 	}
@@ -189,13 +203,24 @@ export class MainPage extends React.Component<
 						/>
 					)}
 
-					<div
+					<Flex
 						className="page-main row around-xs"
 						style={{ margin: '110px 50px' }}
 					>
 						<div className="col-xs">
-							<ImageSelector flashing={this.state.isFlashing} />
+							<SourceSelector
+								flashing={this.state.isFlashing}
+								afterSelected={(source: SourceOptions) => this.setState({ source })}
+							/>
 						</div>
+
+						{/* <div
+							className="page-main row around-xs"
+							style={{ margin: '110px 50px' }}
+						>
+							<div className="col-xs">
+								<SourceSelector flashing={this.state.isFlashing} />
+							</div> */}
 
 						<div className="col-xs">
 							<DriveSelector
@@ -243,9 +268,11 @@ export class MainPage extends React.Component<
 							<Flash
 								goToSuccess={() => this.setState({ current: 'success' })}
 								shouldFlashStepBeDisabled={shouldFlashStepBeDisabled}
+								source={this.state.source}
 							/>
 						</div>
-					</div>
+						{/* </div> */}
+					</Flex>
 				</ThemedProvider>
 			);
 		} else if (this.state.current === 'success') {

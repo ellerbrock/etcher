@@ -71,7 +71,7 @@ const getErrorMessageFromCode = (errorCode: string) => {
 	return '';
 };
 
-const flashImageToDrive = async (goToSuccess: () => void) => {
+const flashImageToDrive = async (goToSuccess: () => void, source: any) => {
 	const devices = selection.getSelectedDevices();
 	const image: any = selection.getImage();
 	const drives = _.filter(availableDrives.getDrives(), (drive: any) => {
@@ -89,7 +89,7 @@ const flashImageToDrive = async (goToSuccess: () => void) => {
 	const iconPath = '../../assets/icon.png';
 	const basename = path.basename(image.path);
 	try {
-		await imageWriter.flash(image.path, drives);
+		await imageWriter.flash(image.path, drives, source);
 		if (!flashState.wasLastFlashCancelled()) {
 			const flashResults: any = flashState.getFlashResults();
 			notification.send(
@@ -160,7 +160,11 @@ const formatSeconds = (totalSeconds: number) => {
 	return `${minutes}m${seconds}s`;
 };
 
-export const Flash = ({ shouldFlashStepBeDisabled, goToSuccess }: any) => {
+export const Flash = ({
+	shouldFlashStepBeDisabled,
+	goToSuccess,
+	source,
+}: any) => {
 	const state: any = flashState.getFlashState();
 	const isFlashing = flashState.isFlashing();
 	const flashErrorCode = flashState.getLastFlashErrorCode();
@@ -179,7 +183,7 @@ export const Flash = ({ shouldFlashStepBeDisabled, goToSuccess }: any) => {
 			return;
 		}
 
-		setErrorMessage(await flashImageToDrive(goToSuccess));
+		setErrorMessage(await flashImageToDrive(goToSuccess, source));
 	};
 
 	const handleFlashErrorResponse = (shouldRetry: boolean) => {
@@ -215,7 +219,7 @@ export const Flash = ({ shouldFlashStepBeDisabled, goToSuccess }: any) => {
 			return;
 		}
 
-		setErrorMessage(await flashImageToDrive(goToSuccess));
+		setErrorMessage(await flashImageToDrive(goToSuccess, source));
 	};
 
 	return (
