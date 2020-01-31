@@ -20,28 +20,32 @@ import { sourceDestination } from 'etcher-sdk';
 import * as _ from 'lodash';
 import * as path from 'path';
 import * as React from 'react';
-import { Button, Flex } from 'rendition';
+import { Flex } from 'rendition';
+import styled from 'styled-components';
 
 import { FeaturedProject } from '../../components/featured-project/featured-project';
 import FinishPage from '../../components/finish/finish';
-import { SourceSelector } from '../../components/source-selector/source-selector';
 import { ReducedFlashingInfos } from '../../components/reduced-flashing-infos/reduced-flashing-infos';
 import { SafeWebview } from '../../components/safe-webview/safe-webview';
 import { SettingsModal } from '../../components/settings/settings';
+import { SourceSelector } from '../../components/source-selector/source-selector';
 import { SVGIcon } from '../../components/svg-icon/svg-icon';
 import * as flashState from '../../models/flash-state';
 import * as selectionState from '../../models/selection-state';
 import * as settings from '../../models/settings';
 import { observe } from '../../models/store';
 import { open as openExternal } from '../../os/open-external/services/open-external';
-import { ThemedProvider } from '../../styled-components';
-import { colors } from '../../theme';
+import { Icon as BaseIcon, ThemedProvider } from '../../styled-components';
 import { middleEllipsis } from '../../utils/middle-ellipsis';
 
 import { bytesToClosestUnit } from '../../../../shared/units';
 
 import { DriveSelector } from './DriveSelector';
 import { Flash } from './Flash';
+
+const Icon = styled(BaseIcon)`
+	margin-right: 20px;
+`;
 
 function getDrivesTitle() {
 	const drives = selectionState.getSelectedDrives();
@@ -168,29 +172,22 @@ export class MainPage extends React.Component<
 								right: 0,
 							}}
 						>
-							<Button
+							<Icon
 								icon={<FontAwesomeIcon icon={faCog} />}
-								color={colors.secondary.background}
-								fontSize={24}
-								style={{ width: '30px' }}
 								plain
-								onClick={() => this.setState({ hideSettings: false })}
 								tabIndex={5}
+								onClick={() => this.setState({ hideSettings: false })}
 							/>
 							{!settings.get('disableExternalLinks') && (
-								<Button
+								<Icon
 									icon={<FontAwesomeIcon icon={faQuestionCircle} />}
-									color={colors.secondary.background}
-									fontSize={24}
-									style={{ width: '30px' }}
-									plain
 									onClick={() =>
 										openExternal(
 											selectionState.getImageSupportUrl() ||
 												'https://github.com/balena-io/etcher/blob/master/SUPPORT.md',
 										)
 									}
-									tabIndex={5}
+									tabIndex={6}
 								/>
 							)}
 						</span>
@@ -210,17 +207,11 @@ export class MainPage extends React.Component<
 						<div className="col-xs">
 							<SourceSelector
 								flashing={this.state.isFlashing}
-								afterSelected={(source: SourceOptions) => this.setState({ source })}
+								afterSelected={(source: SourceOptions) =>
+									this.setState({ source })
+								}
 							/>
 						</div>
-
-						{/* <div
-							className="page-main row around-xs"
-							style={{ margin: '110px 50px' }}
-						>
-							<div className="col-xs">
-								<SourceSelector flashing={this.state.isFlashing} />
-							</div> */}
 
 						<div className="col-xs">
 							<DriveSelector
@@ -271,7 +262,6 @@ export class MainPage extends React.Component<
 								source={this.state.source}
 							/>
 						</div>
-						{/* </div> */}
 					</Flex>
 				</ThemedProvider>
 			);

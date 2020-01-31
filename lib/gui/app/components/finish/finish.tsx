@@ -25,7 +25,6 @@ import { store } from '../../models/store';
 import * as analytics from '../../modules/analytics';
 import { updateLock } from '../../modules/update-lock';
 import { open as openExternal } from '../../os/open-external/services/open-external';
-import { ThemedProvider } from '../../styled-components';
 import { FlashAnother } from '../flash-another/flash-another';
 import { FlashResults } from '../flash-results/flash-results';
 import { SVGIcon } from '../svg-icon/svg-icon';
@@ -72,66 +71,64 @@ function FinishPage({ goToMain }: { goToMain: () => void }) {
 	const results = flashState.getFlashResults().results || {};
 	const progressMessage = messages.progress;
 	return (
-		<ThemedProvider>
-			<div className="page-finish row around-xs">
-				<div className="col-xs">
-					<div className="box center">
-						<FlashResults
-							results={results}
-							message={progressMessage}
-							errors={formattedErrors}
-						></FlashResults>
+		<div className="page-finish row around-xs">
+			<div className="col-xs">
+				<div className="box center">
+					<FlashResults
+						results={results}
+						message={progressMessage}
+						errors={formattedErrors}
+					></FlashResults>
 
-						<FlashAnother
-							onClick={(options: any) => restart(options, goToMain)}
-						></FlashAnother>
-					</div>
+					<FlashAnother
+						onClick={(options: any) => restart(options, goToMain)}
+					></FlashAnother>
+				</div>
 
-					<div className="box center">
-						<div className="fallback-banner">
-							<div className="caption caption-big">
-								Thanks for using
-								<span
-									style={{ cursor: 'pointer' }}
-									onClick={() =>
-										openExternal(
-											'https://balena.io/etcher?ref=etcher_offline_banner',
-										)
-									}
-								>
-									<SVGIcon
-										paths={['../../assets/etcher.svg']}
-										width="165px"
-										height="auto"
-									></SVGIcon>
-								</span>
-							</div>
-							<div className="caption caption-small fallback-footer">
-								made with
+				<div className="box center">
+					<div className="fallback-banner">
+						<div className="caption caption-big">
+							Thanks for using
+							<span
+								style={{ cursor: 'pointer' }}
+								onClick={() =>
+									openExternal(
+										'https://balena.io/etcher?ref=etcher_offline_banner',
+									)
+								}
+							>
 								<SVGIcon
-									paths={['../../assets/love.svg']}
+									paths={['../../assets/etcher.svg']}
+									width="165px"
+									height="auto"
+								></SVGIcon>
+							</span>
+						</div>
+						<div className="caption caption-small fallback-footer">
+							made with
+							<SVGIcon
+								paths={['../../assets/love.svg']}
+								width="auto"
+								height="20px"
+							></SVGIcon>
+							by
+							<span
+								style={{ cursor: 'pointer' }}
+								onClick={() =>
+									openExternal('https://balena.io?ref=etcher_success')
+								}
+							>
+								<SVGIcon
+									paths={['../../assets/balena.svg']}
 									width="auto"
 									height="20px"
 								></SVGIcon>
-								by
-								<span
-									style={{ cursor: 'pointer' }}
-									onClick={() =>
-										openExternal('https://balena.io?ref=etcher_success')
-									}
-								>
-									<SVGIcon
-										paths={['../../assets/balena.svg']}
-										width="auto"
-										height="20px"
-									></SVGIcon>
-								</span>
-							</div>
+							</span>
 						</div>
 					</div>
 				</div>
 			</div>
-		</ThemedProvider>
+		</div>
 	);
 }
 

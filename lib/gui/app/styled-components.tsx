@@ -33,15 +33,10 @@ const theme = {
 			opacity: 1,
 		},
 		extend: () => `
-      &&& {
+      && {
 				width: 200px;
 				height: 48px;
 				font-size: 16px;
-
-				&:hover {
-					background-color: ${colors.primary.background};
-					color: ${colors.primary.foreground};
-				}
 
 				&:disabled {
 					background-color: ${colors.dark.disabled.background};
@@ -62,9 +57,18 @@ export const ThemedProvider = (props: any) => (
 	<Provider theme={theme} {...props}></Provider>
 );
 
-// export const BaseButton = styled(Button)`
-// 	height: 48px;
-// `;
+export const Icon = styled(props => <Button plain {...props} />)`
+	&&& {
+		width: 24px;
+		height: 24px;
+		font-size: 24px;
+		color: #fff;
+
+		> svg {
+			font-size: 1em;
+		}
+	}
+`;
 
 export const StepButton = styled((props: any) => <Button {...props}></Button>)`
 	color: rgba(255, 255, 255, 0.7);
@@ -72,20 +76,22 @@ export const StepButton = styled((props: any) => <Button {...props}></Button>)`
 `;
 
 export const ChangeButton = styled(Button)`
-	border-radius: 24px;
-	color: ${colors.primary.background};
-	padding: 0;
-	width: 100%;
-	height: auto;
+	&& {
+		border-radius: 24px;
+		color: ${colors.primary.background};
+		padding: 0;
+		height: 18px;
+		font-size: 14px;
 
-	&:enabled {
-		&:hover,
-		&:focus,
-		&:active {
-			color: #8f9297;
+		&:enabled {
+			&:hover,
+			&:focus,
+			&:active {
+				color: #8f9297;
+			}
 		}
+		${space}
 	}
-	${space}
 `;
 export const StepNameButton = styled(Button)`
 	border-radius: 24px;

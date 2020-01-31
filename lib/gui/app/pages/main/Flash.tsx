@@ -119,7 +119,7 @@ const flashImageToDrive = async (goToSuccess: () => void, source: any) => {
 		if (!errorMessage) {
 			error.image = basename;
 			analytics.logException(error);
-			errorMessage = messages.error.genericFlashError();
+			errorMessage = messages.error.genericFlashError(error);
 		}
 
 		return errorMessage;
@@ -303,7 +303,11 @@ export const Flash = ({
 					done={() => handleFlashErrorResponse(true)}
 					action={'Retry'}
 				>
-					<Txt>{errorMessage}</Txt>
+					<Txt>
+						{_.map(errorMessage.split('\n'), (message, key) => (
+							<p key={`${message}-${key}`}>{message}</p>
+						))}
+					</Txt>
 				</Modal>
 			)}
 

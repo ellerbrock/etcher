@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { faLink, faFile } from '@fortawesome/free-solid-svg-icons';
+import { faFile, faLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { sourceDestination } from 'etcher-sdk';
 import * as _ from 'lodash';
 import { GPTPartition, MBRPartition } from 'partitioninfo';
 import * as path from 'path';
 import * as React from 'react';
-import { Modal, Input } from 'rendition';
-import { default as styled } from 'styled-components';
+import { Input, Modal } from 'rendition';
+import styled from 'styled-components';
 
 import * as errors from '../../../../shared/errors';
 import * as messages from '../../../../shared/messages';
@@ -41,6 +41,7 @@ import {
 	StepNameButton,
 	StepSelection,
 } from '../../styled-components';
+import { colors } from '../../theme';
 import { middleEllipsis } from '../../utils/middle-ellipsis';
 import { SVGIcon } from '../svg-icon/svg-icon';
 
@@ -87,20 +88,26 @@ interface Flow {
 	label: string;
 }
 
-const FlowSelector = ({ flow }: { flow: Flow }) => {
-	const [hoverState, setHoverState] = React.useState(false);
-	return (
-		<StepButton
-			onClick={flow.onClick}
-			icon={flow.icon}
-			primary={hoverState}
-			onMouseEnter={() => setHoverState(true)}
-			onMouseLeave={() => setHoverState(false)}
-		>
-			{flow.label}
-		</StepButton>
-	);
-};
+const FlowSelector = styled(
+	({ flow, ...props }: { flow: Flow; props?: any }) => {
+		return (
+			<StepButton plain onClick={flow.onClick} icon={flow.icon} {...props}>
+				{flow.label}
+			</StepButton>
+		);
+	},
+)`
+	border-radius: 24px;
+
+	:enabled:hover {
+		background-color: ${colors.primary.background};
+		color: ${colors.primary.foreground};
+
+		svg {
+			color: ${colors.primary.foreground}!important;
+		}
+	}
+`;
 
 type Source = typeof sourceDestination.File | typeof sourceDestination.Http;
 
@@ -179,7 +186,7 @@ export class SourceSelector extends React.Component<
 			flashingWorkflowUuid: store.getState().toJS().flashingWorkflowUuid,
 		});
 
-		this.openImageSelector();
+		selectionState.deselectImage();
 	}
 
 	private selectImage(
@@ -501,7 +508,7 @@ export class SourceSelector extends React.Component<
 							// Avoid analytics and selection state changes
 							// if no file was resolved from the dialog.
 							if (!imagePath) {
-								analytics.logEvent('Image selector closed', {
+								analytics.logEvent('URL selector closed', {
 									applicationSessionUuid: store.getState().toJS()
 										.applicationSessionUuid,
 									flashingWorkflowUuid: store.getState().toJS()
